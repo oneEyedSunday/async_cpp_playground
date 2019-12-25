@@ -96,3 +96,13 @@ size_t packaged_copyFile(const std::string& inFile, const std::string& outFile)
     return writeFuture.get();
     // really cannot see how this helps or simplifies
 }
+
+size_t async_copyFile(const string& inFile, const string& outFile)
+{
+    future<vector<char>> readFuture = async(readFile, inFile);
+    auto copyFuture = async([&readFuture](const string& path){
+        return writeFile(readFuture.get(), path);
+    }, outFile);
+    
+    return copyFuture.get();
+}
