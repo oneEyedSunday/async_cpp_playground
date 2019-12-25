@@ -21,5 +21,5 @@ size_t sync_copyFile(const std::string&, const std::string&);
 
 size_t future_copyFile(const std::string&, const std::string&);
 
-
+size_t packaged_copyFile(const std::string&, const std::string&);
 #endif /* file_work_hpp */

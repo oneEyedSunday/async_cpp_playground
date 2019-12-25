@@ -64,3 +64,35 @@ size_t future_copyFile(const string& inFile, const string& outFile)
     return writeFuture.get();
 }
 
+size_t packaged_copyFile(const std::string& inFile, const std::string& outFile)
+{
+    using ReadTaskType = vector<char>(const string&);
+    // define packaged task with signature of function to read
+    packaged_task<ReadTaskType> readTask(readFile);
+    
+//    future<vector<char>> readFuture = readTask.get_future();
+    future<vector<char>> readFuture { readTask.get_future() };// with initializer
+    
+    // pass task to thread with move, since it cannot be copied
+    thread readThread { move(readTask), inFile };
+    
+    using WriteTaskType = size_t(const string&);
+    
+    // define the writeTask with a lamba
+    // capture the readFuture by ref for reasons stated above
+    // pass in the outPath
+    packaged_task<WriteTaskType> writeTask([&readFuture](const string& outPath){
+        return writeFile(readFuture.get(), outPath);
+    });
+    
+    // a packaged task just wraps a promise
+    future<size_t> writeFuture{ writeTask.get_future() };
+    
+    thread writeThread { move(writeTask), outFile };
+    
+    
+    readThread.join();
+    writeThread.join();
+    return writeFuture.get();
+    // really cannot see how this helps or simplifies
+}
