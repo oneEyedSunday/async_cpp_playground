@@ -1,0 +1,5 @@
+*.txt
+*.o
+../async.xcodeproj/xcuserdata/ispoa.xcuserdatad/xcdebugger/
+/async.xcodeproj/xcuserdata/ispoa.xcuserdatad/xcdebugger/
+../async.xcodeproj
