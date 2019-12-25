@@ -1,7 +1,7 @@
 # To compile 
 ```sh
 cd async && 
-g++ -c file_work.cpp function_defs.cpp main.cpp && 
+g++ -c file_work.cpp function_defs.cpp main.cpp --std=c++11 && 
 g++ file_work.o function_defs.o main.o -o ${PATH_TO_EXEC}/run.sh &&
 ${PATH_TO_EXEC}/run.sh inputfile outputfile
 ```

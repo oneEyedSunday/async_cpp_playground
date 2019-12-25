@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <future>
 
 using namespace std;
 
@@ -35,3 +36,31 @@ size_t sync_copyFile(const string& inFile, const string& outFile)
 {
     return writeFile(readFile(inFile), outFile);
 }
+
+
+size_t future_copyFile(const string& inFile, const string& outFile)
+{
+    promise<vector<char> > readPromise;
+    future<vector<char> > readFuture = readPromise.get_future();
+    
+    // pass a lambda to the thread
+    // capturing by reference the readPromise to make them available
+    // and the input file name
+    thread readFileThread([&readPromise, inFile]() {
+        readPromise.set_value(readFile(inFile));
+    });
+    
+    promise<size_t> writePromise;
+    future<size_t> writeFuture = writePromise.get_future();
+    
+    thread writeFileThread([&readFuture, &writePromise, outFile]() {
+        // this waits on read thread since .get() is blocking
+        writePromise.set_value(writeFile(readFuture.get(), outFile));
+    });
+    
+    readFileThread.join();
+    writeFileThread.join();
+    
+    return writeFuture.get();
+}
+

@@ -63,6 +63,11 @@ void handleSelection(const std::string& inPath, const std::string& outPath)
             writeFile(contents, outPath);
             break;
             
+        case '2':
+            std::cout << "Attempting to write file contents to " << outPath << " via futures & promises..." << std::endl;
+            future_copyFile(inPath, outPath);
+            break;
+            
         default:
             std::cerr << "Wrong selection" << std::endl;
             break;
