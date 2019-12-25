@@ -11,6 +11,7 @@
 #include <string>
 #include <fstream>
 #include <future>
+#include <iostream>
 
 using namespace std;
 
@@ -106,3 +107,22 @@ size_t async_copyFile(const string& inFile, const string& outFile)
     
     return copyFuture.get();
 }
+
+#if PPL == 1
+size_t ppl_copyFile(const string& inFile, const string& outFile)
+{
+    Concurrency::task<vector<char>> readTask = Concurrency::create_task([inFile]() {
+        return readFile(inFile);
+    });
+    Concurrency::task<size_t> writeTask = Concurrency::create_task([&readTask, outFile]() {
+        return writeFile(readTask.get(), outFile);
+    });
+    return writeTask.get();
+}
+#else
+size_t ppl_copyFile(const string& inFile, const string& outFile)
+{
+    std::cerr << "PPL (MS Concurrency RunTime) not available on this platform" << std::endl;
+    return -1;
+}
+#endif

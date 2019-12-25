@@ -75,6 +75,9 @@ void handleSelection(const std::string& inPath, const std::string& outPath)
             std::cout <<"Attempting to write file contents to " << outPath << " via std::async..." << std::endl;
             async_copyFile(inPath, outPath);
             break;
+        case '5':
+            ppl_copyFile(inPath, outPath);
+            break;
         default:
             std::cerr << "Wrong selection" << std::endl;
             break;
