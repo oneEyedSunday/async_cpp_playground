@@ -53,7 +53,8 @@ void handleSelection(const std::string& inPath, const std::string& outPath)
 {
     std::string response = "1";
     
-    std::getline(std::cin, response);
+    if (!std::getline(std::cin, response)) return;
+    
     std::vector<char> contents = readFile(inPath);
     
     switch (response.substr(0, 1).c_str()[0]) {
