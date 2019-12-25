@@ -48,4 +48,6 @@ size_t packaged_copyFile(const std::string&, const std::string&);
 size_t async_copyFile(const std::string&, const std::string&);
 
 size_t ppl_copyFile(const std::string&, const std::string&);
+
+size_t ppl_read_then_copy(const std::string&, const std::string&);
 #endif /* file_work_hpp */

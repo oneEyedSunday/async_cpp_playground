@@ -119,8 +119,25 @@ size_t ppl_copyFile(const string& inFile, const string& outFile)
     });
     return writeTask.get();
 }
+
+size_t ppl_read_then_copy(const std::string&, const std::string&)
+{
+    Concurrency::task<size_t> result =
+    Concurrency::create_task([inFile](){
+        return readFile(inFile);
+    }).then([outFile](const vector<char>& buffer){
+        return writeFile(buffer, outFile);
+    });
+    return result.get();
+}
 #else
-size_t ppl_copyFile(const string& inFile, const string& outFile)
+size_t ppl_copyFile(const string&, const string&)
+{
+    std::cerr << "PPL (MS Concurrency RunTime) not available on this platform" << std::endl;
+    return -1;
+}
+
+size_t ppl_read_then_copy(const std::string&, const std::string&)
 {
     std::cerr << "PPL (MS Concurrency RunTime) not available on this platform" << std::endl;
     return -1;

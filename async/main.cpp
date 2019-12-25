@@ -76,7 +76,12 @@ void handleSelection(const std::string& inPath, const std::string& outPath)
             async_copyFile(inPath, outPath);
             break;
         case '5':
+            std::cout <<"Attempting to write file contents to " << outPath << " via PPL(MS only)..." << std::endl;
             ppl_copyFile(inPath, outPath);
+            break;
+        case '6':
+            std::cout <<"Attempting to write file contents to " << outPath << " via Task Continuations (MS Only)..." << std::endl;
+            ppl_read_then_copy(inPath, outPath);
             break;
         default:
             std::cerr << "Wrong selection" << std::endl;
